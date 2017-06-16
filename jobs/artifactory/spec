@@ -1,0 +1,16 @@
+---
+name: artifactory
+packages:
+- jfrog-artifactory-pro
+- jre-8
+- postgres-jdbc-driver
+templates:
+  bin/ctl: bin/ctl
+  bin/monit_debugger: bin/monit_debugger
+  data/properties.sh.erb: data/properties.sh
+  data/artifactory.lic.erb: data/artifactory.lic
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+properties:
+  artifactory_license_key:
+    description: "Artifactory license key"

@@ -1,0 +1,5 @@
+---
+name: postgres-jdbc-driver
+dependencies: []
+files:
+- postgres-jdbc-driver/postgresql-42.1.1.jar

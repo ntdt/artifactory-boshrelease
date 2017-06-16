@@ -1,0 +1,5 @@
+---
+name: jfrog-artifactory-pro
+dependencies: []
+files:
+- jfrog-artifactory-pro/jfrog-artifactory-pro-5.3.2.zip

@@ -1,0 +1,5 @@
+---
+name: jre-8
+dependencies: []
+files:
+- jre-8/jre-8u131-linux-x64.tar.gz

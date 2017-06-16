@@ -1,0 +1,57 @@
+---
+
+name: artifactory-warden
+director_uuid: 3be2d019-b3b6-40d8-9100-abe31196afcd
+
+update:
+  canaries: 1
+  canary_watch_time: 1000-30000
+  max_in_flight: 50
+  serial: false
+  update_watch_time: 1000-30000
+
+instance_groups:
+- instances: 1
+  jobs:
+  - name: artifactory
+    release: artifactory
+    properties:
+      artifactory_license: ((artifactory_license))
+  name: artifactory
+  networks:
+  - name: default
+  persistent_disk: 0
+  resource_pool: small_z1
+
+compilation:
+  cloud_properties:
+    name: random
+  network: default
+  reuse_compilation_vms: true
+  workers: 6
+
+resource_pools:
+- cloud_properties:
+    name: random
+  name: small_z1
+  network: default
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+
+networks:
+- name: default
+  subnets:
+  - gateway: 10.244.51.1
+    name: default
+    range: 10.244.51.0/24
+    static:
+    - 10.244.51.2 - 10.244.51.60
+  type: manual
+
+properties: {}
+
+releases:
+- name: artifactory
+  version: latest
+

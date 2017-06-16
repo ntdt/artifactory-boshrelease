@@ -1,0 +1,5 @@
+check process artifactory
+  with pidfile /var/vcap/sys/run/artifactory/artifactory.pid
+  start program "/var/vcap/jobs/artifactory/bin/monit_debugger artifactory_ctl '/var/vcap/jobs/artifactory/bin/ctl start'"
+  stop program "/var/vcap/jobs/artifactory/bin/monit_debugger artifactory_ctl '/var/vcap/jobs/artifactory/bin/ctl stop'"
+  group vcap
