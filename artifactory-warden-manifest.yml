@@ -1,7 +1,8 @@
 ---
 
 name: artifactory-warden
-director_uuid: 3be2d019-b3b6-40d8-9100-abe31196afcd
+#director_uuid: 3be2d019-b3b6-40d8-9100-abe31196afcd
+director_uuid: 60e39314-90f6-4494-8b57-2da5695030e4
 
 update:
   canaries: 1

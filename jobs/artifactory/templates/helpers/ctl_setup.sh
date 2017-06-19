@@ -53,11 +53,27 @@ then
 fi
 
 export ARTIFACTORY_HOME=/var/vcap/packages/jfrog-artifactory-pro
-mkdir $LOG_DIR/catalina
-ln -s $LOG_DIR/catalina $ARTIFACTORY_HOME/tomcat/logs
-rm -rf $ARTIFACTORY_HOME/logs
-ln -s $LOG_DIR $ARTIFACTORY_HOME/logs
-ln -s $RUN_DIR $ARTIFACTORY_HOME/run
+
+if [[ ! -d $LOG_DIR/catalina ]]
+then
+  mkdir $LOG_DIR/catalina
+  ln -s $LOG_DIR/catalina $ARTIFACTORY_HOME/tomcat/logs
+fi
+
+if [[ ! -L $ARTIFACTORY_HOME/logs ]]
+then
+  rm -rf $ARTIFACTORY_HOME/logs
+  ln -s $LOG_DIR $ARTIFACTORY_HOME/logs
+fi
+
+if [[ ! -L $ARTIFACTORY_HOME/run ]]
+then
+  ln -s $RUN_DIR $ARTIFACTORY_HOME/run  
+fi
+
+export ARTIFACTORY_LICENSE=${ARTIFACTORY_LICENSE:-}
+echo $ARTIFACTORY_LICENSE > $ARTIFACTORY_HOME/etc/artifactory.lic
+
 chown -RL vcap:vcap $ARTIFACTORY_HOME/
 chmod +x $ARTIFACTORY_HOME/tomcat/bin/*.sh
 
