@@ -7,9 +7,25 @@ packages:
 templates:
   bin/ctl: bin/ctl
   bin/monit_debugger: bin/monit_debugger
+  bin/artifactory.default: bin/artifactory.default
   data/properties.sh.erb: data/properties.sh
+  etc/artifactory.config.import.yml.erb: etc/artifactory.config.import.yml
+  etc/postgresql.properties.erb: etc/db.properties
+  etc/binarystore.xml: etc/binarystore.xml
   helpers/ctl_setup.sh: helpers/ctl_setup.sh
   helpers/ctl_utils.sh: helpers/ctl_utils.sh
 properties:
   artifactory_license:
     description: "Artifactory license key"
+  postgresql_host:
+    description: "PostgreSQL database host or ip address"
+  postgresql_port:
+    description: "PostgreSQL database port"
+  postgresql_user:
+    description: "PostgreSQL database username"
+    default: artifactory
+  postgresql_pwd:
+    description: "PostgreSQL database password"
+    default: password
+    
+    

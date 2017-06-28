@@ -60,6 +60,11 @@ then
   ln -s $LOG_DIR/catalina $ARTIFACTORY_HOME/tomcat/logs
 fi
 
+if [[ ! -f $LOG_DIR/artifactory.log ]]
+then
+  touch $LOG_DIR/artifactory.log
+fi
+
 if [[ ! -L $ARTIFACTORY_HOME/logs ]]
 then
   rm -rf $ARTIFACTORY_HOME/logs
@@ -71,11 +76,48 @@ then
   ln -s $RUN_DIR $ARTIFACTORY_HOME/run  
 fi
 
-export ARTIFACTORY_LICENSE=${ARTIFACTORY_LICENSE:-}
-echo $ARTIFACTORY_LICENSE > $ARTIFACTORY_HOME/etc/artifactory.lic
+if [[ ! -f $ARTIFACTORY_HOME/etc/artifactory.config.import.yml ]]
+then
+  cp /var/vcap/jobs/artifactory/etc/artifactory.config.import.yml $ARTIFACTORY_HOME/etc/
+fi
+
+cp /var/vcap/jobs/artifactory/etc/db.properties $ARTIFACTORY_HOME/etc/db.properties
+
+if [[ ! -L $ARTIFACTORY_HOME/tomcat/lib/postgresql-9.4.1212.jar ]]
+then
+  ln -s /var/vcap/packages/postgres-jdbc-driver/postgresql-9.4.1212.jar $ARTIFACTORY_HOME/tomcat/lib/postgresql-9.4.1212.jar
+fi
+
+if ! grep -Fxq "artifactory.onboarding.skipWizard=true" $ARTIFACTORY_HOME/etc/artifactory.system.properties
+then
+  echo 'artifactory.onboarding.skipWizard=true' >> $ARTIFACTORY_HOME/etc/artifactory.system.properties
+fi
+
+cp /var/vcap/jobs/artifactory/bin/artifactory.default $ARTIFACTORY_HOME/bin/artifactory.default
 
 chown -RL vcap:vcap $ARTIFACTORY_HOME/
 chmod +x $ARTIFACTORY_HOME/tomcat/bin/*.sh
+
+if [[ ! -d $STORE_DIR/data ]]
+then
+  mkdir $STORE_DIR/data
+  chown vcap:vcap $STORE_DIR/data
+  cp /var/vcap/jobs/artifactory/etc/binarystore.xml $ARTIFACTORY_HOME/etc/binarystore.xml
+fi
+
+if [[ ! -L $ARTIFACTORY_HOME/backup ]]
+then
+  mkdir $STORE_DIR/backup
+  chown vcap:vcap $STORE_DIR/backup
+  ln -s $STORE_DIR/backup $ARTIFACTORY_HOME/backup
+fi
+
+if [[ ! -d $STORE_DIR/access ]]
+then
+  mkdir -p $STORE_DIR/access
+  chown vcap:vcap $STORE_DIR/access
+  ln -s $STORE_DIR/access $ARTIFACTORY_HOME/access
+fi
 
 PIDFILE=$RUN_DIR/$output_label.pid
 
