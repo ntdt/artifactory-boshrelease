@@ -1,0 +1,46 @@
+name: artifactory
+version: "1"
+commit_hash: a84a0fb
+uncommitted_changes: false
+jobs:
+- name: artifactory
+  version: 3867aed1f6e801665cadcdbc1eee44141d4ac484
+  fingerprint: 3867aed1f6e801665cadcdbc1eee44141d4ac484
+  sha1: a21698a729377bb16c9bf6e01c4b1e9fea511b31
+- name: httpd
+  version: 1caaba54619e54eead4614c84b5f8b7611b49e91
+  fingerprint: 1caaba54619e54eead4614c84b5f8b7611b49e91
+  sha1: 1e60c943b9ac80cbadd3a5a0ad33c4ea1c09707f
+packages:
+- name: apache2
+  version: e2ef1ec6bc9b2ef1eee99c767177a9a6f738e816
+  fingerprint: e2ef1ec6bc9b2ef1eee99c767177a9a6f738e816
+  sha1: 3d409810c253da014504825f81a2aaf754edfc00
+  dependencies:
+  - pcre
+  - expat
+- name: expat
+  version: f604d9fdc6ff83b140ae9f9e8d9917afe66bcd5f
+  fingerprint: f604d9fdc6ff83b140ae9f9e8d9917afe66bcd5f
+  sha1: f7908ed563e78868fa7ab02e7b9baa8eb4206d64
+  dependencies: []
+- name: jfrog-artifactory-pro
+  version: 8f7b1349b4b2694071396c269c1ebe5442ce6ae3
+  fingerprint: 8f7b1349b4b2694071396c269c1ebe5442ce6ae3
+  sha1: 1e91aace389be2dc6cdce537ad47bac3f6b41d1c
+  dependencies: []
+- name: jre-8
+  version: 3dc3f5d1dfbbc476aa0e6488940f4a604d5e87d2
+  fingerprint: 3dc3f5d1dfbbc476aa0e6488940f4a604d5e87d2
+  sha1: 91700df15ded24779938da03585df9895a4528dc
+  dependencies: []
+- name: pcre
+  version: e8daa251ababd376858409383ad3196de48a7cd6
+  fingerprint: e8daa251ababd376858409383ad3196de48a7cd6
+  sha1: 6b1b7de18b1f2122d7978a990d902ea044afcdb3
+  dependencies: []
+- name: postgres-jdbc-driver
+  version: b08688af150d5f611170d0db9821a2c9133fac6f
+  fingerprint: b08688af150d5f611170d0db9821a2c9133fac6f
+  sha1: f253bc2d03a09727871f0e1f9be38bf0f1903777
+  dependencies: []
