@@ -1,0 +1,5 @@
+check process httpd
+  with pidfile /var/vcap/packages/apache2/logs/httpd.pid
+  start program "/var/vcap/jobs/httpd/bin/monit_debugger httpd_ctl '/var/vcap/jobs/httpd/bin/httpd_ctl start'"
+  stop program "/var/vcap/jobs/httpd/bin/monit_debugger httpd_ctl '/var/vcap/jobs/httpd/bin/httpd_ctl stop'"
+  group vcap

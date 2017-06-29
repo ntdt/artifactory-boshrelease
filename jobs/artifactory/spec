@@ -9,7 +9,7 @@ templates:
   bin/monit_debugger: bin/monit_debugger
   bin/artifactory.default: bin/artifactory.default
   data/properties.sh.erb: data/properties.sh
-  etc/artifactory.config.import.yml.erb: etc/artifactory.config.import.yml
+  etc/artifactory.lic.erb: etc/artifactory.lic
   etc/postgresql.properties.erb: etc/db.properties
   etc/binarystore.xml: etc/binarystore.xml
   helpers/ctl_setup.sh: helpers/ctl_setup.sh

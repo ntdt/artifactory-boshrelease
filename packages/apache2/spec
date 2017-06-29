@@ -1,0 +1,7 @@
+---
+name: apache2
+dependencies: [pcre,expat]
+files:
+- apache2/httpd-2.4.26.tar.gz
+- apr/apr-1.6.2.tar.gz
+- apr-util/apr-util-1.6.0.tar.gz

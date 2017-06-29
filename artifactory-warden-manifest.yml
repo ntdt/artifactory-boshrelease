@@ -19,6 +19,13 @@ instance_groups:
       artifactory_license: ((artifactory_license))
       postgresql_host: ((postgresql_host))
       postgresql_port: ((postgresql_port))
+  - name: httpd
+    release: artifactory
+    properties:
+      proxy_public_server_name: ((proxy_public_server_name))
+      proxy_internal_hostname: ((proxy_internal_hostname))
+      proxy_ssl_certificate: ((proxy_ssl_certificate))
+      proxy_ssl_private_key: ((proxy_ssl_private_key))
   name: artifactory
   networks:
   - name: default

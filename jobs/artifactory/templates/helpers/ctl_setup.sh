@@ -76,9 +76,9 @@ then
   ln -s $RUN_DIR $ARTIFACTORY_HOME/run  
 fi
 
-if [[ ! -f $ARTIFACTORY_HOME/etc/artifactory.config.import.yml ]]
+if [[ ! -f $ARTIFACTORY_HOME/etc/artifactory.lic ]]
 then
-  cp /var/vcap/jobs/artifactory/etc/artifactory.config.import.yml $ARTIFACTORY_HOME/etc/
+  cp /var/vcap/jobs/artifactory/etc/artifactory.lic $ARTIFACTORY_HOME/etc/
 fi
 
 cp /var/vcap/jobs/artifactory/etc/db.properties $ARTIFACTORY_HOME/etc/db.properties
@@ -107,7 +107,7 @@ fi
 
 if [[ ! -L $ARTIFACTORY_HOME/backup ]]
 then
-  mkdir $STORE_DIR/backup
+  mkdir -p $STORE_DIR/backup
   chown vcap:vcap $STORE_DIR/backup
   ln -s $STORE_DIR/backup $ARTIFACTORY_HOME/backup
 fi

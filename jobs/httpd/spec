@@ -1,0 +1,29 @@
+---
+name: httpd
+packages: 
+  - apache2
+  - pcre
+
+templates:
+  bin/httpd_ctl: bin/httpd_ctl
+  bin/monit_debugger: bin/monit_debugger
+  data/properties.sh.erb: data/properties.sh
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+  etc/ssl/certs/artifacts.crt.erb: etc/ssl/certs/artifacts.crt
+  etc/ssl/private/artifacts.key.erb: etc/ssl/private/artifacts.key
+  conf/httpd.conf: conf/httpd.conf
+  conf/vhosts/artifactory.conf.erb: conf/vhosts/artifactory.conf
+
+properties:
+  proxy_ssl_certificate:
+    description: "Reverse proxy ssl certificate"
+  proxy_ssl_private_key:
+    description: "Reverse proxy ssl key"
+  proxy_public_server_name:
+    description: "Reverse proxy public server name"
+  proxy_internal_hostname:
+    description: "Reverse proxy internak hostname"
+  proxy_internal_port:
+    description: "Reverse proxy internal port"
+    default: 8081

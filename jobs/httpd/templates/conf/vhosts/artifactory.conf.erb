@@ -1,0 +1,55 @@
+<VirtualHost *:80>
+   ServerName <%= p('proxy_public_server_name') %>
+   Redirect / https://<%= p('proxy_public_server_name') %>/
+</VirtualHost>
+
+<VirtualHost *:443>
+
+    ProxyPreserveHost On
+
+    ServerName <%= p('proxy_public_server_name') %>
+    ServerAlias *.<%= p('proxy_public_server_name') %>
+    ServerAdmin server@admin
+
+    SSLEngine on
+    SSLCertificateFile /var/vcap/jobs/httpd/etc/ssl/certs/artifacts.crt
+    SSLCertificateKeyFile /var/vcap/jobs/httpd/etc/ssl/private/artifacts.key
+    SSLProxyEngine on
+
+    ## Application specific logs
+    ## ErrorLog ${APACHE_LOG_DIR}/<%= p('proxy_public_server_name') %>-error.log
+    ## CustomLog ${APACHE_LOG_DIR}/<%= p('proxy_public_server_name') %>-access.log combined
+
+    AllowEncodedSlashes On
+    RewriteEngine on
+
+    RewriteCond %{SERVER_PORT} (.*)
+    RewriteRule (.*) - [E=my_server_port:%1]
+    ##  NOTE: The 'REQUEST_SCHEME' Header is supported only from apache version 2.4 and above
+    RewriteCond %{REQUEST_SCHEME} (.*)
+    RewriteRule (.*) - [E=my_scheme:%1]
+
+    RewriteCond %{HTTP_HOST} (.*)
+    RewriteRule (.*) - [E=my_custom_host:%1]
+
+    RewriteCond "%{REQUEST_URI}" "^/(v1|v2)/"
+    RewriteCond "%{HTTP_HOST}" "^(.*)\.<%= p('proxy_public_server_name') %>$"
+    RewriteRule "^/(v1|v2)/(.*)$" "/artifactory/api/docker/%1/$1/$2" [PT]
+
+
+    RewriteRule ^/$                /artifactory/webapp/ [R,L]
+    RewriteRule ^/artifactory(/)?$      /artifactory/webapp/ [R,L]
+    RewriteRule ^/artifactory/webapp$   /artifactory/webapp/ [R,L]
+
+    RequestHeader set Host %{my_custom_host}e
+    RequestHeader set X-Forwarded-Port %{my_server_port}e
+    ## NOTE: {my_scheme} requires a module which is supported only from apache version 2.4 and above
+    RequestHeader set X-Forwarded-Proto %{my_scheme}e
+    RequestHeader set X-Artifactory-Override-Base-Url %{my_scheme}e://<%= p('proxy_public_server_name') %>:%{my_server_port}e/artifactory
+    ProxyPassReverseCookiePath /artifactory /artifactory
+
+    ProxyRequests off
+    ProxyPreserveHost on
+    ProxyPass /artifactory/ http://<%= p('proxy_internal_hostname') %>:<%= p('proxy_internal_port') %>/artifactory/
+    ProxyPassReverse /artifactory/ http://<%= p('proxy_internal_hostname') %>:<%= p('proxy_internal_port') %>/artifactory/
+</VirtualHost>
