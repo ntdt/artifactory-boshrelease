@@ -83,9 +83,9 @@ fi
 
 cp /var/vcap/jobs/artifactory/etc/db.properties $ARTIFACTORY_HOME/etc/db.properties
 
-if [[ ! -L $ARTIFACTORY_HOME/tomcat/lib/postgresql-9.4.1212.jar ]]
+if [[ ! -L $ARTIFACTORY_HOME/tomcat/lib/postgresql-42.1.1.jar ]]
 then
-  ln -s /var/vcap/packages/postgres-jdbc-driver/postgresql-9.4.1212.jar $ARTIFACTORY_HOME/tomcat/lib/postgresql-9.4.1212.jar
+  ln -s /var/vcap/packages/postgres-jdbc-driver/postgresql-42.1.1.jar $ARTIFACTORY_HOME/tomcat/lib/postgresql-42.1.1.jar
 fi
 
 if ! grep -Fxq "artifactory.onboarding.skipWizard=true" $ARTIFACTORY_HOME/etc/artifactory.system.properties

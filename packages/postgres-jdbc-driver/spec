@@ -2,4 +2,4 @@
 name: postgres-jdbc-driver
 dependencies: []
 files:
-- postgres-jdbc-driver/postgresql-9.4.1212.jar
+- postgres-jdbc-driver/postgresql-42.1.1.jar
