@@ -127,28 +127,28 @@ echo '##########################################################################
 echo ''
 
 echo 'Adding blob apache2/httpd-2.4.26.tar.gz'
-bosh add-blob ./tmp/completed/httpd-2.4.26.tar.gz apache2/httpd-2.4.26.tar.gz
+bosh add blob ./tmp/completed/httpd-2.4.26.tar.gz apache2
 
 echo 'Adding blob apr/apr-1.6.2.tar.gz'
-bosh add-blob ./tmp/completed/apr-1.6.2.tar.gz apr/apr-1.6.2.tar.gz
+bosh add blob ./tmp/completed/apr-1.6.2.tar.gz apr
 
 echo 'Adding blob apr-util/apr-util-1.6.0.tar.gz'
-bosh add-blob ./tmp/completed/apr-util-1.6.0.tar.gz apr-util/apr-util-1.6.0.tar.gz
+bosh add blob ./tmp/completed/apr-util-1.6.0.tar.gz apr-util
 
 echo 'Adding blob expat/expat-2.2.1.tar.bz2'
-bosh add-blob ./tmp/completed/expat-2.2.1.tar.bz2 expat/expat-2.2.1.tar.bz2
+bosh add blob ./tmp/completed/expat-2.2.1.tar.bz2 expat
 
 echo 'Adding blob jfrog-artifactory-pro/jfrog-artifactory-pro-5.3.2.zip'
-bosh add-blob ./tmp/completed/jfrog-artifactory-pro-5.3.2.zip jfrog-artifactory-pro/jfrog-artifactory-pro-5.3.2.zip
+bosh add blob ./tmp/completed/jfrog-artifactory-pro-5.3.2.zip jfrog-artifactory-pro
 
 echo 'Adding blob jre-8/jre-8u131-linux-x64.tar.gz'
-bosh add-blob ./tmp/completed/jre-8u131-linux-x64.tar.gz jre-8/jre-8u131-linux-x64.tar.gz
+bosh add blob ./tmp/completed/jre-8u131-linux-x64.tar.gz jre-8
 
 echo 'Adding blob pcre/pcre-8.40.tar.gz'
-bosh add-blob ./tmp/completed/pcre-8.40.tar.gz pcre/pcre-8.40.tar.gz
+bosh add blob ./tmp/completed/pcre-8.40.tar.gz pcre
 
 echo 'Adding blob postgres-jdbc-driver/postgresql-42.1.1.jar'
-bosh add-blob ./tmp/completed/postgresql-42.1.1.jar postgres-jdbc-driver/postgresql-42.1.1.jar
+bosh add blob ./tmp/completed/postgresql-42.1.1.jar postgres-jdbc-driver
 
 echo ''
 echo '################################################################################'
@@ -157,7 +157,7 @@ echo '##########################################################################
 echo ''
 
 echo "Creating release"
-create_cmd="bosh create-release --name artifactory --force"
+create_cmd="bosh create release --name artifactory --with-tarball --force"
 if [ "$version" != "" ]; then
     create_cmd+=" --version "${version}""
 fi
