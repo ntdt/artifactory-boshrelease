@@ -3,4 +3,4 @@ final_name: artifactory
 blobstore:
   provider: local
   options:
-    blobstore_path: /tmp/artifactory-blobs
+    blobstore_path: blobs 
