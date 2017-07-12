@@ -14,6 +14,8 @@ templates:
   etc/binarystore.xml: etc/binarystore.xml
   helpers/ctl_setup.sh: helpers/ctl_setup.sh
   helpers/ctl_utils.sh: helpers/ctl_utils.sh
+  config/id_rsa_migration.erb: config/id_rsa_migration
+  config/id_rsa_migration.pub.erb: config/id_rsa_migration.pub
 properties:
   artifactory_license:
     description: "Artifactory license key"
@@ -27,5 +29,7 @@ properties:
   postgresql_pwd:
     description: "PostgreSQL database password"
     default: password
-    
-    
+  migration_user_private_key:
+    description: "Private key for the migration user to give access to the import source"
+  migration_user_public_key:
+    description: "Public key for the migration user to give the acces to the import errand"    

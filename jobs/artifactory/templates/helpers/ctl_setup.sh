@@ -119,6 +119,19 @@ then
   ln -s $STORE_DIR/access $ARTIFACTORY_HOME/access
 fi
 
+MIGRATION_HOME='/var/vcap/data/migration'
+
+if ! id 'migration' >/dev/null 2>&1
+then
+  adduser --home ${MIGRATION_HOME} --ingroup vcap --system --shell /bin/bash migration
+  usermod -G bosh_sshers,bosh_sudoers migration
+  mkdir ${MIGRATION_HOME}/.ssh
+  cat ${JOB_DIR}/config/id_rsa_migration.pub > ${MIGRATION_HOME}/.ssh/authorized_keys
+  chown migration:vcap -R ${MIGRATION_HOME}/.ssh
+  chmod 700 ${MIGRATION_HOME}/.ssh
+  chmod 600 ${MIGRATION_HOME}/.ssh/authorized_keys
+fi
+
 PIDFILE=$RUN_DIR/$output_label.pid
 
 echo '$PATH' $PATH

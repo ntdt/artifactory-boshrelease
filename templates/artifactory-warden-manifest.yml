@@ -1,0 +1,101 @@
+---
+
+name: artifactory-warden
+director_uuid: 707dabc3-b998-470f-a72c-c28966cb9042
+
+update:
+  canaries: 1
+  canary_watch_time: 1000-30000
+  max_in_flight: 50
+  serial: false
+  update_watch_time: 1000-30000
+
+instance_groups:
+- instances: 1
+  jobs:
+  - name: postgres
+    release: postgres
+    persistent_disk_pool: default
+    properties:
+      databases:
+        address: (( grab postgresql_host))
+        port: (( grab postgresql_port))
+        databases:
+          - name: artifactory
+            citext: true
+        roles:
+          - name: artifactory
+            password: 'password'
+  - name: artifactory
+    release: artifactory
+    persistent_disk_pool: default
+    properties:
+      artifactory_license: (( grab artifactory_license))
+      postgresql_host: (( grab postgresql_host))
+      postgresql_port: (( grab postgresql_port))
+      migration_user_private_key: (( grab migration_user_private_key))
+      migration_user_public_key: (( grab migration_user_public_key))
+  - name: httpd
+    release: artifactory
+    properties:
+      proxy_public_server_name: (( grab proxy_public_server_name))
+      proxy_internal_hostname: (( grab proxy_internal_hostname))
+      proxy_ssl_certificate: (( grab proxy_ssl_certificate))
+      proxy_ssl_private_key: (( grab proxy_ssl_private_key))
+  name: artifactory
+  networks:
+  - name: default
+  resource_pool: small_z1
+- instances: 1
+  name: import
+  lifecycle: errand
+  jobs:
+  - name: import
+    release: artifactory
+    properties:
+      source_admin_password: (( grab source_admin_password))
+      target_admin_password: (( grab target_admin_password))
+      migration_user_private_key: (( grab migration_user_private_key))
+      source_ip_address: ((grab source_ip_address))
+      target_ip_address: ((grab target_ip_address))
+  networks:
+  - name: default
+  resource_pool: small_z1
+
+compilation:
+  cloud_properties:
+    name: random
+  network: default
+  reuse_compilation_vms: true
+  workers: 6
+
+disk_pools:
+- name: default
+  disk_size: 30000
+
+resource_pools:
+- cloud_properties:
+    name: random
+  name: small_z1
+  network: default
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+
+networks:
+- name: default
+  subnets:
+  - gateway: 10.244.51.1
+    name: default
+    range: 10.244.51.0/24
+    static:
+    - 10.244.51.2 - 10.244.51.60
+  type: manual
+
+properties: {}
+
+releases:
+- name: artifactory
+  version: latest
+- name: postgres
+  version: latest

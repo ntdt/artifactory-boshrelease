@@ -1,0 +1,66 @@
+#!/bin/bash
+
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+# Setup env vars and folders for the errand script
+source /var/vcap/jobs/import/helpers/ctl_setup.sh 'import'
+
+############################################################################
+
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
+redirect_output ${JOB_NAME}
+
+LOG_FILE_EXPORT="${LOG_DIR}/export.log"
+
+echo "Beginning export of ${SRC_IP_ADDRESS}"
+
+curl -s -k -u admin:${SRC_ADMIN_PWD} \
+     --connect-timeout 10 --retry 10 --retry-delay 1 \
+     -H "Content-Type: application/json" \
+     -X POST \
+     -d '{"exportPath" : "/opt/jfrog/artifactory-data/migration-tmp", "verbose" : "true", "excludeContent": "false"}' \
+     https://${SRC_IP_ADDRESS}/artifactory/api/export/system | tee ${LOG_FILE_EXPORT}
+
+EXPORT_FOLDER=$(cat ${LOG_FILE_EXPORT} | awk 'FNR == 2 { gsub("\.tmp", "", $5); print $5}')
+
+if [ -z "${EXPORT_FOLDER// }" ]; then
+    echo "Export from ${SRC_IP_ADDRESS} has failed. Exiting."
+    exit 1
+fi
+
+echo "Export folder is '${EXPORT_FOLDER}'"
+
+SSH_CONNECT="ssh -o StrictHostKeyChecking=no -i ${JOB_DIR}/config/id_rsa_migration migration@${TRGT_IP_ADDRESS}"
+
+echo "Begin synching ${EXPORT_FOLDER} to destination ${TRGT_IP_ADDRESS}"
+
+${SSH_CONNECT} "rsync -avz -e \"ssh -o StrictHostKeyChecking=no -i /var/vcap/jobs/artifactory/config/id_rsa_migration\" --chown=vcap:vcap --rsync-path=\"sudo rsync\" migration@${SRC_IP_ADDRESS}:${EXPORT_FOLDER} /var/vcap/data/migration"
+
+IMPORT_FOLDER=$(${SSH_CONNECT} "sudo find /var/vcap/data/migration -name $(basename ${EXPORT_FOLDER})")
+
+echo "Import folder is ${IMPORT_FOLDER}"
+
+${SSH_CONNECT} "rm ${IMPORT_FOLDER}/etc/access.bootstrap.json"
+
+echo "Beginning import of ${IMPORT_FOLDER} into ${TRGT_IP_ADDRESS}"
+
+LOG_FILE_IMPORT="${LOG_DIR}/import.log"
+
+curl -k -u admin:${TRGT_ADMIN_PWD} \
+     --connect-timeout 10 --retry 10 --retry-delay 1 \
+     -H "Content-Type: application/json" \
+     -X POST \
+     -d "{\"importPath\" : \"${IMPORT_FOLDER}\", \"verbose\" : \"false\"}" \
+     https://${TRGT_IP_ADDRESS}/artifactory/api/import/system | tee ${LOG_FILE_IMPORT}
+
+echo "Cleaning..."
+
+${SSH_CONNECT} "rm -rf ${IMPORT_FOLDER}"
+
+echo 'Completed'
+exit 0

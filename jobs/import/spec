@@ -1,0 +1,15 @@
+---
+name: import
+packages: []
+templates:
+  bin/run: bin/run
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+  config/id_rsa_migration.erb: config/id_rsa_migration
+  config/env.sh.erb: config/env.sh
+properties:
+  source_admin_password: ((source_admin_password))
+  target_admin_password: ((target_admin_password))
+  migration_user_private_key: ((migration_user_private_key))
+  source_ip_address: ((source_ip_address))
+  target_ip_address: ((target_ip_address))
